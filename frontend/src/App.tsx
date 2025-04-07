@@ -1,0 +1,45 @@
+import { RouterProvider, createBrowserRouter } from "react-router";
+import Home from "./Home";
+import Login from "./Account/Login";
+import Signup from "./Account/Signup";
+import Profile from "./Account/Profile";
+import RecipeDetail from "./Recipe/RecipeDetail";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Home />,
+  },
+  {
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "/signup",
+    element: <Signup />,
+  },
+  {
+    path: "/profile",
+    element: <Profile />,
+  },
+  {
+    path: "/recipe/:id",
+    element: <RecipeDetail />,
+  },
+]);
+
+function App() {
+  return (
+
+    <div className="relative h-screen bg-amber-50 overflow-hidden flex justify-center">
+      <div className="absolute top-20 left-32 w-72 h-72 bg-green-900 opacity-30 rounded-full blur-3xl pointer-events-none z-0" />
+      <div className="absolute top-80 right-20 w-96 h-96 bg-orange-50 opacity-20 rounded-full blur-[100px] pointer-events-none z-0" />
+      <div className="absolute bottom-20 left-1/2 -translate-x-1/2 w-64 h-64 bg-orange-500 opacity-25 rounded-full blur-[80px] pointer-events-none z-0" />
+
+      <RouterProvider router={router}/>
+
+    </div>
+  );
+}
+
+export default App;

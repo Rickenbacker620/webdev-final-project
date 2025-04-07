@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: InterVariable, sans-serif;
+}
+
+.btn {
+  @apply px-4 py-2 rounded-xl shadow-md transition duration-300 cursor-pointer;
+}
+
+.btn-orange {
+  @apply bg-orange-500 hover:bg-orange-600 text-white;
+}
+
+.btn-green {
+  @apply bg-green-500 hover:bg-green-600 text-white;
+}
+
+.btn-green-light {
+  @apply bg-green-400 text-white;
+}
