@@ -1,31 +1,24 @@
-import { Button } from "@headlessui/react";
 import { BookmarkIcon, HeartIcon, PlusIcon } from "@heroicons/react/24/outline";
-import { Link, useNavigate } from "react-router";
-
-const mockData = Array.from({ length: 4 }, (_, i) => ({
-  id: i + 1,
-  title: `Recipe ${i + 1}`,
-  description: `Description for Recipe ${i + 1}`,
-  image: `https://placehold.co/600x400/00${i}00${i}/FFFFFF`,
-}));
-
-function handleLike(recipeId: number) {
-  console.log(`Liked recipe ${recipeId}`);
-}
-
-function handleBookmark(recipeId: number) {
-  console.log(`Bookmarked recipe ${recipeId}`);
-}
+import { Link, useNavigate, useLoaderData } from "react-router";
+import { NavBar } from "./NavBar";
 
 function Recipe({ recipe, isLoggedIn }) {
   const navigate = useNavigate();
 
-  const handleRecipeClick = () => {
+  const handleRecipeClick = async () => {
     navigate(`/recipe/${recipe.id}`);
   };
 
+  const handleLike = async () => {
+    console.log(`Liked recipe ${recipe.id}`);
+  };
+
+  const handleBookmark = async () => {
+    console.log(`Bookmarked recipe ${recipe.id}`);
+  };
+
   return (
-    <div className="relative z-10 backdrop-blur-md bg-gray-400/30 border border-white/20 rounded-2xl p-8 shadow-lg transform duration-700 hover:shadow-2xl">
+    <div className="relative z-10 border border-gray-300 rounded-2xl p-8 transform duration-700 hover:border-gray-500">
       <img
         src={recipe.image}
         alt={recipe.title}
@@ -36,60 +29,85 @@ function Recipe({ recipe, isLoggedIn }) {
       <p className="text-sm text-gray-600">{recipe.description}</p>
       {isLoggedIn && (
         <div className="flex space-x-4 mt-2">
-          <Button
+          <button
             type="button"
-            className="cursor-pointer"
-            onClick={() => handleLike(recipe.id)}
+            className="btn btn-ghost btn-circle text-red-600"
+            onClick={() => handleLike()}
           >
-            <HeartIcon className="size-5 text-red-500" />
-          </Button>
-          <Button
+            <HeartIcon className="w-6 h-6" />
+          </button>
+          <button
             type="button"
-            className="cursor-pointer"
-            onClick={() => handleBookmark(recipe.id)}
+            className="btn btn-ghost btn-circle text-green-600"
+            onClick={() => handleBookmark()}
           >
-            <BookmarkIcon className="size-5 text-green-500" />
-          </Button>
+            <BookmarkIcon className="w-6 h-6" />
+          </button>
         </div>
       )}
     </div>
   );
 }
 
+function SearchBar() {
+  return (
+    <input
+      type="text"
+      placeholder="Search"
+      className="input input-bordered w-28 md:w-auto"
+    />
+  );
+}
+
+function AvatarDropdown() {
+  return (
+    <div className="dropdown dropdown-end">
+      <div
+        tabIndex={0}
+        role="button"
+        className="btn btn-ghost btn-circle avatar"
+      >
+        <div className="w-10 rounded-full">
+          <img
+            alt="Tailwind CSS Navbar component"
+            src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+          />
+        </div>
+      </div>
+      <ul
+        tabIndex={0}
+        className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
+      >
+        <li>
+          <a className="justify-between">
+            Profile
+            <span className="badge">New</span>
+          </a>
+        </li>
+        <li>
+          <a>Settings</a>
+        </li>
+        <li>
+          <a>Logout</a>
+        </li>
+      </ul>
+    </div>
+  );
+}
+
 function Home() {
-  // Replace with real auth state
-  const isLoggedIn = true;
+  const recipes = useLoaderData(); // Fetch data from the loader
+  const isLoggedIn = true; // Replace with real auth state
 
   return (
-    <div className="max-w-7xl mx-auto p-4">
-      <header className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Home</h1>
-        {!isLoggedIn ? (
-          <div className="space-x-4">
-            <Link to="/login">
-              <Button className="btn btn-orange">Log in</Button>
-            </Link>
-            <Link to="/signup">
-              <Button className="btn btn-green">Sign Up</Button>
-            </Link>
-          </div>
-        ) : (
-          <Button className="btn btn-green-light">
-            <PlusIcon className="size-5 text-white inline" />
-            Post Recipe
-          </Button>
-        )}
-      </header>
-
-      <section>
-        <h2 className="text-2xl font-semibold mb-4">Featured Recipes</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {mockData.map((recipe) => (
-            <Recipe key={recipe.id} recipe={recipe} isLoggedIn={isLoggedIn} />
-          ))}
-        </div>
-      </section>
-    </div>
+    <section>
+      <h2 className="text-2xl font-semibold mb-4">Featured Recipes</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {recipes.map((recipe) => (
+          <Recipe key={recipe.id} recipe={recipe} isLoggedIn={isLoggedIn} />
+        ))}
+      </div>
+    </section>
   );
 }
 

@@ -1,59 +1,68 @@
 import { useState } from "react";
+import { Field, Fieldset, Input, Label, Legend, Button } from "@headlessui/react";
+import { useNavigate } from "react-router";
 
 function RecipeEditor() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Recipe submitted:", { title, description, image });
+    navigate("/"); // Redirect to home page after submission
     // Add logic to send data to the backend
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-4 bg-white shadow-md rounded-md">
-      <h2 className="text-2xl font-bold mb-4">Post a Recipe</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label htmlFor="title" className="block text-sm font-medium text-gray-700">Title</label>
-          <input
-            type="text"
-            id="title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
-          <textarea
-            id="description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="image" className="block text-sm font-medium text-gray-700">Image URL</label>
-          <input
-            type="text"
-            id="image"
-            value={image}
-            onChange={(e) => setImage(e.target.value)}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            required
-          />
-        </div>
-        <button
-          type="submit"
-          className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-        >
-          Submit Recipe
-        </button>
-      </form>
+    <div className="flex min-w-[300px] max-w-lg w-1/4 items-center justify-center min-h-screen">
+      <div className="w-full rounded-2xl shadow-lg bg-gray-50/80">
+        <Fieldset className="space-y-6 p-6 sm:p-10">
+          <Legend className="text-2xl font-bold text-green-700 text-center">
+            Post a Recipe
+          </Legend>
+          <Field>
+            <Label className="block text-sm font-medium text-green-600">Title</Label>
+            <Input
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="mt-3 block w-full rounded-lg border border-green-300 px-3 py-2 text-sm text-green-700"
+              placeholder="Enter the recipe title"
+              required
+            />
+          </Field>
+          <Field>
+            <Label className="block text-sm font-medium text-green-600">Description</Label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className="mt-3 block w-full rounded-lg border border-green-300 px-3 py-2 text-sm text-green-700"
+              placeholder="Enter the recipe description"
+              required
+            />
+          </Field>
+          <Field>
+            <Label className="block text-sm font-medium text-green-600">Image URL</Label>
+            <Input
+              type="text"
+              value={image}
+              onChange={(e) => setImage(e.target.value)}
+              className="mt-3 block w-full rounded-lg border border-green-300 px-3 py-2 text-sm text-green-700"
+              placeholder="Enter the image URL"
+              required
+            />
+          </Field>
+          <Button
+            type="submit"
+            className="mt-4 w-full bg-orange-500 text-white px-4 py-2 rounded-2xl data-[hover]:bg-orange-600 data-[active]:bg-orange-700 transition duration-200 cursor-pointer"
+            onClick={handleSubmit}
+          >
+            Submit Recipe
+          </Button>
+        </Fieldset>
+      </div>
     </div>
   );
 }
