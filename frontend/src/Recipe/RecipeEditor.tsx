@@ -1,5 +1,12 @@
 import { useState } from "react";
-import { Field, Fieldset, Input, Label, Legend, Button } from "@headlessui/react";
+import {
+  Field,
+  Fieldset,
+  Input,
+  Label,
+  Legend,
+  Button,
+} from "@headlessui/react";
 import { useNavigate } from "react-router";
 
 function RecipeEditor() {
@@ -23,7 +30,9 @@ function RecipeEditor() {
             Post a Recipe
           </Legend>
           <Field>
-            <Label className="block text-sm font-medium text-green-600">Title</Label>
+            <Label className="block text-sm font-medium text-green-600">
+              Title
+            </Label>
             <Input
               type="text"
               value={title}
@@ -34,7 +43,9 @@ function RecipeEditor() {
             />
           </Field>
           <Field>
-            <Label className="block text-sm font-medium text-green-600">Description</Label>
+            <Label className="block text-sm font-medium text-green-600">
+              Description
+            </Label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -44,7 +55,9 @@ function RecipeEditor() {
             />
           </Field>
           <Field>
-            <Label className="block text-sm font-medium text-green-600">Image URL</Label>
+            <Label className="block text-sm font-medium text-green-600">
+              Image URL
+            </Label>
             <Input
               type="text"
               value={image}
