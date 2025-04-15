@@ -26,13 +26,13 @@ export function Recipe({
         console.error("Error liking recipe:", error);
       },
       onSettled: async () => {
-        await queryClient.invalidateQueries({
+        queryClient.invalidateQueries({
           queryKey: ["get", "/api/v1/recipes/liked-recipes"],
         });
-        await queryClient.invalidateQueries({
-          queryKey: ["get", "/api/v1/recipes"],
+        queryClient.invalidateQueries({
+          queryKey: ["get", "/api/v1/recipes/"],
         });
-        await queryClient.invalidateQueries({
+        queryClient.invalidateQueries({
           queryKey: ["get", "/api/v1/recipes/my-recipes"],
         });
       },

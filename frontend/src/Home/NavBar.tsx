@@ -55,7 +55,7 @@ function NavBar() {
   const {user} = useAuth()
 
   return (
-    <div className="navbar bg-base-100 shadow-sm">
+    <div className="navbar bg-base-100 shadow-sm sticky top-0 z-50">
       <div className="flex-1">
         <Link to="/" className="btn btn-ghost text-xl">What to Eat</Link>
       </div>
@@ -63,10 +63,10 @@ function NavBar() {
         {!user ? (
           <div className="space-x-4">
             <Link to="/login">
-              <button className="btn btn-warning">Log in</button>
+              <button className="btn btn-primary">Log in</button>
             </Link>
             <Link to="/signup">
-              <button className="btn btn-success">Sign Up</button>
+              <button className="btn btn-secondary">Sign Up</button>
             </Link>
           </div>
         ) : (

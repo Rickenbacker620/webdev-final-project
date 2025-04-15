@@ -4,7 +4,7 @@ import {Recipe} from "../components/Recipe";
 
 
 function Home() {
-  const { data: recipes } = $api.useQuery("get", "/api/v1/recipes")
+  const { data: recipes } = $api.useQuery("get", "/api/v1/recipes/")
 
   const [isLoggedIn, setIsLoggedIn] = useState(true);
 

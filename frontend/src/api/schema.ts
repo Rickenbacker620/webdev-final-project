@@ -55,7 +55,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/recipes": {
+    "/api/v1/recipes/": {
         parameters: {
             query?: never;
             header?: never;
@@ -65,7 +65,8 @@ export interface paths {
         /** Get Recipes */
         get: operations["recipes-get_recipes"];
         put?: never;
-        post?: never;
+        /** Create Recipe */
+        post: operations["recipes-create_recipe"];
         delete?: never;
         options?: never;
         head?: never;
@@ -120,23 +121,6 @@ export interface paths {
         post?: never;
         /** Delete Recipe */
         delete: operations["recipes-delete_recipe"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/recipes/": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Create Recipe */
-        post: operations["recipes-create_recipe"];
-        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -198,8 +182,6 @@ export interface components {
             steps: string;
             /** Image Url */
             image_url?: string | null;
-            /** Author Id */
-            author_id: number;
         };
         /** RecipeRead */
         RecipeRead: {
@@ -388,6 +370,39 @@ export interface operations {
             };
         };
     };
+    "recipes-create_recipe": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RecipeCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecipeRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     "recipes-get_my_recipes": {
         parameters: {
             query?: never;
@@ -511,39 +526,6 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    "recipes-create_recipe": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RecipeCreate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["RecipeRead"];
-                };
             };
             /** @description Validation Error */
             422: {

@@ -53,7 +53,6 @@ class RecipeCreate(SQLModel):
     ingredients: str
     steps: str
     image_url: str | None = None
-    author_id: int
 
 class RecipeRead(SQLModel):
     id: int

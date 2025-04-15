@@ -1,3 +1,4 @@
+from datetime import datetime
 from fastapi import APIRouter, HTTPException
 from sqlmodel import select
 
@@ -26,7 +27,7 @@ async def get_recipes_with_liked(recipes: list[Recipe], current_user: CurrentUse
 
 
 
-@router.get("", response_model=list[RecipeRead])
+@router.get("/", response_model=list[RecipeRead])
 async def get_recipes(current_user: CurrentUserNotRequired, session: SessionDep):
     recipes_list = await session.exec(select(Recipe).where(Recipe.public))
 
@@ -66,8 +67,8 @@ async def get_recipe(recipe_id: int, session: SessionDep):
     return recipe
 
 @router.post("/", response_model=RecipeRead)
-async def create_recipe(recipe: RecipeCreate, session: SessionDep):
-    new_recipe = Recipe.model_validate(recipe)
+async def create_recipe(user: CurrentUser, recipe: RecipeCreate, session: SessionDep):
+    new_recipe = Recipe(**recipe.model_dump(), created_at=datetime.now(), author_id=user.id)
     session.add(new_recipe)
     await session.commit()
     await session.refresh(new_recipe)
@@ -114,3 +115,10 @@ async def like_recipe(recipe_id: int, current_user: CurrentUser, session: Sessio
         new_like = RecipeLike(user_id=current_user.id, recipe_id=recipe_id)
         session.add(new_like)
     await session.commit()
+
+@router.get("/search", response_model=list[RecipeRead])
+async def search_recipes(title: str, session: SessionDep):
+    recipes = await session.exec(
+        select(Recipe).where(Recipe.title.ilike(f"%{title}%"))
+    )
+    return [RecipeRead.model_validate(recipe) for recipe in recipes.all()]

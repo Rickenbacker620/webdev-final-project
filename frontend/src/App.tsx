@@ -6,6 +6,7 @@ import { NavBar } from "./Home/NavBar";
 import Profile from "./Account/Profile";
 import Login from "./Account/Login";
 import Signup from "./Account/Signup";
+import RecipeEditor from "./Recipe/RecipeEditor";
 
 const router = createBrowserRouter([
   {
@@ -15,6 +16,10 @@ const router = createBrowserRouter([
       {
         index: true, // Default child route
         element: <Home />,
+      },
+      {
+        path: "/recipe/new",
+        element: <RecipeEditor />,
       },
       {
         path: "/recipe/:id",
