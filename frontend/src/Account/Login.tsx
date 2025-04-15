@@ -1,49 +1,86 @@
-import {
-  Button,
-  Field,
-  Fieldset,
-  Input,
-  Label,
-  Legend,
-} from "@headlessui/react";
+import { useNavigate } from "react-router";
+import { fetchClient } from "../api/client";
+import useAuth from "../hooks/useAuth";
 
 function Login() {
+  const navigate = useNavigate()
+  const {loginMutation} = useAuth()
+
+
+  // const handleLogin = async (event: React.MouseEvent<HTMLButtonElement>) => {
+  //   event.preventDefault();
+  //   // Handle login logic here
+  //   console.log("Login form submitted");
+  //   const {data} = await fetchClient.POST("/api/v1/auth/access-token", {
+  //     body: {
+  //       username: "regular_user",
+  //       password: "password123",
+  //       grant_type: "password",
+  //       scope: ""
+  //     },
+  //     bodySerializer(body) {
+  //       return new URLSearchParams(body).toString();
+  //     },
+  //     headers: {
+  //       "Content-Type": "application/x-www-form-urlencoded",
+  //     }
+  //   });
+  //   localStorage.setItem("jwt", data.access_token);
+  //   navigate("/");
+  // };
+
+  const handleLogin = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    console.log("Login form submitted");
+    await loginMutation.mutateAsync({
+      body: {
+        username: "regular_user",
+        password: "password123",
+        grant_type: "password",
+        scope: "",
+      },
+      bodySerializer(body) {
+        return new URLSearchParams(body).toString();
+      },
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    })
+  };
+
   return (
-    <div className="flex min-w-[300px] max-w-lg w-1/4 items-center justify-center min-h-screen">
-      <div className="max-w-lg w-full min-w-[300px] rounded-xl shadow-lg bg-white/70">
-        <Fieldset className="space-y-6 p-6 sm:p-10">
-          <Legend className="text-2xl font-bold text-green-700 text-center">
-            Login
-          </Legend>
-          <Field>
-            <Label className="block text-sm font-medium text-green-600">
-              Email
-            </Label>
-            <Input
+      <div className="max-w-lg w-1/4 min-w-[300px] mt-20 rounded-xl shadow-lg bg-base-200 mx-auto">
+        <form className="space-y-6 p-6 sm:p-10">
+          <h2 className="text-2xl font-bold text-primary text-center">Login</h2>
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text text-primary">Email</span>
+            </label>
+            <input
               type="email"
-              className="mt-3 block w-full rounded-lg border border-green-300 px-3 py-2 text-sm text-green-700"
+              className="input input-bordered border-primary text-primary"
               placeholder="Enter your email"
             />
-          </Field>
-          <Field>
-            <Label className="block text-sm font-medium text-green-600">
-              Password
-            </Label>
-            <Input
+          </div>
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text text-primary">Password</span>
+            </label>
+            <input
               type="password"
-              className="mt-3 block w-full rounded-lg border border-green-300 px-3 py-2 text-sm text-green-700"
+              className="input input-bordered border-primary text-primary"
               placeholder="Enter your password"
             />
-          </Field>
-          <Button
+          </div>
+          <button
             type="submit"
-            className="mt-4 w-full bg-orange-500 text-white px-4 py-2 rounded-lg data-[hover]:bg-orange-600 data-[active]:bg-orange-700 transition duration-200 cursor-pointer"
+            className="btn btn-secondary w-full hover:bg-secondary-focus active:bg-secondary-content transition duration-200"
+            onClick={handleLogin}
           >
             Log in
-          </Button>
-        </Fieldset>
+          </button>
+        </form>
       </div>
-    </div>
   );
 }
 

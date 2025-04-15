@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router";
 import { PlusIcon } from "@heroicons/react/24/outline";
+import useAuth from "../hooks/useAuth";
 
 function SearchBar() {
   return (
@@ -12,6 +13,10 @@ function SearchBar() {
 }
 
 function AvatarDropdown() {
+
+  const {logout} = useAuth()
+
+
   return (
     <div className="dropdown dropdown-end">
       <div
@@ -22,25 +27,22 @@ function AvatarDropdown() {
         <div className="w-10 rounded-full">
           <img
             alt="Tailwind CSS Navbar component"
-            src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+            src="https://avatar.iran.liara.run/public/boy"
           />
         </div>
       </div>
       <ul
         tabIndex={0}
-        className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
+        className="menu menu-lg dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
       >
         <li>
-          <a className="justify-between">
-            Profile
-            <span className="badge">New</span>
-          </a>
+          <Link to="/profile"> Profile </Link>
         </li>
         <li>
           <a>Settings</a>
         </li>
         <li>
-          <a>Logout</a>
+          <a onClick={logout}>Logout</a>
         </li>
       </ul>
     </div>
@@ -50,18 +52,15 @@ function AvatarDropdown() {
 function NavBar() {
   const navigate = useNavigate();
 
-  // Replace with real auth state
-  const isLoggedIn = true;
+  const {user} = useAuth()
+
   return (
     <div className="navbar bg-base-100 shadow-sm">
       <div className="flex-1">
-        <a className="btn btn-ghost text-xl">What to Eat</a>
+        <Link to="/" className="btn btn-ghost text-xl">What to Eat</Link>
       </div>
       <div className="flex gap-2">
-        <SearchBar />
-        <AvatarDropdown />
-
-        {!isLoggedIn ? (
+        {!user ? (
           <div className="space-x-4">
             <Link to="/login">
               <button className="btn btn-warning">Log in</button>
@@ -71,13 +70,17 @@ function NavBar() {
             </Link>
           </div>
         ) : (
-          <button
-            className="btn btn-primary flex items-center space-x-1"
-            onClick={() => navigate("/recipe/new")}
-          >
-            <PlusIcon className="w-6 h-6 inline" strokeWidth="2" />
-            <span>Post Recipe</span>
-          </button>
+          <>
+            <SearchBar />
+            <AvatarDropdown />
+            <button
+              className="btn btn-primary flex items-center space-x-1"
+              onClick={() => navigate("/recipe/new")}
+            >
+              <PlusIcon className="w-6 h-6 inline" strokeWidth="2" />
+              <span>Post Recipe</span>
+            </button>
+          </>
         )}
       </div>
     </div>

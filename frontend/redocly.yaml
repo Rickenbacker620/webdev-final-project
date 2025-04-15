@@ -1,0 +1,5 @@
+apis:
+  core@v1:
+    root:  http://127.0.0.1:8000/api/v1/openapi.json
+    x-openapi-ts:
+      output: ./src/api/schema.ts

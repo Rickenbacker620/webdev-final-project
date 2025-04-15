@@ -3,6 +3,9 @@ import Layout from "./Layout";
 import Home from "./Home";
 import RecipeDetail from "./Recipe/RecipeDetail";
 import { NavBar } from "./Home/NavBar";
+import Profile from "./Account/Profile";
+import Login from "./Account/Login";
+import Signup from "./Account/Signup";
 
 const router = createBrowserRouter([
   {
@@ -12,19 +15,23 @@ const router = createBrowserRouter([
       {
         index: true, // Default child route
         element: <Home />,
-        loader: async () => {
-          return Array.from({ length: 4 }, (_, i) => ({
-            id: i + 1,
-            title: `Recipe ${i + 1}`,
-            description: `Description for Recipe ${i + 1}`,
-            image: `https://placehold.co/600x400/00${i}00${i}/FFFFFF`,
-          }));
-        },
       },
       {
-        path: "recipe/:id",
+        path: "/recipe/:id",
         element: <RecipeDetail />,
       },
+      {
+        path: "/profile",
+        element: <Profile />,
+      },
+      {
+        path: "/login",
+        element: <Login />,
+      },
+      {
+        path: "/signup",
+        element: <Signup />,
+      }
     ],
   },
 ]);

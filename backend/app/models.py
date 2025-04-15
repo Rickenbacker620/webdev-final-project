@@ -63,6 +63,7 @@ class RecipeRead(SQLModel):
     steps: str
     image_url: str | None = None
     created_at: datetime
+    liked: bool = False
     author_id: int
 
 class RecipeUpdate(SQLModel):
