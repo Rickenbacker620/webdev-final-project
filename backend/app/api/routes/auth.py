@@ -1,7 +1,6 @@
 from fastapi import Depends, HTTPException, status, APIRouter
 from datetime import timedelta
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from passlib.context import CryptContext
+from fastapi.security import OAuth2PasswordRequestForm
 from typing import Annotated
 
 from app.api.deps import CurrentUser, SessionDep, authenticate_user, get_user_by_username

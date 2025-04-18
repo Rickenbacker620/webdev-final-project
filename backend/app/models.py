@@ -37,7 +37,6 @@ class RecipeStats(SQLModel):
     recipe_id: int
     likes_count: int
     comments_count: int
-    user_liked: bool = False
 
 class RecipeRead(SQLModel):
     id: int
