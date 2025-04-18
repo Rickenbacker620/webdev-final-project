@@ -10,7 +10,7 @@ function Profile() {
 
   const { data: likedRecipes } = $api.useQuery(
     "get",
-    "/api/v1/recipes/liked-recipes"
+    "/api/v1/recipes/liked-recipes",
   );
 
   return (

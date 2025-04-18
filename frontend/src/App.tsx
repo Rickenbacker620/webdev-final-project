@@ -1,11 +1,11 @@
 import { RouterProvider, createBrowserRouter } from "react-router";
-import Layout from "./Layout";
-import Home from "./Home";
-import RecipeDetail from "./Recipe/RecipeDetail";
-import { NavBar } from "./Home/NavBar";
-import Profile from "./Account/Profile";
 import Login from "./Account/Login";
+import Profile from "./Account/Profile";
 import Signup from "./Account/Signup";
+import Home from "./Home";
+import { NavBar } from "./Home/NavBar";
+import Layout from "./Layout";
+import RecipeDetail from "./Recipe/RecipeDetail";
 import RecipeEditor from "./Recipe/RecipeEditor";
 
 const router = createBrowserRouter([
@@ -36,7 +36,7 @@ const router = createBrowserRouter([
       {
         path: "/signup",
         element: <Signup />,
-      }
+      },
     ],
   },
 ]);
