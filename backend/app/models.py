@@ -1,79 +1,52 @@
-
 from sqlmodel import SQLModel, Field
 from datetime import datetime
 from pydantic import BaseModel
 
 
-class Recipe(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
-    title: str = Field(index=True)
-    description: str | None = None
-    ingredients: str
-    steps: str
-    image_url: str | None = None
-    created_at: datetime
-    public: bool = Field(default=True)
-    author_id: int = Field(foreign_key="user.id")
+# Pydantic model for external recipe reference
+# This is NOT stored in our database
+class Recipe(BaseModel):
+    id: int  # ID from the external API
+    # External API will provide other recipe details
 
 class Comment(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     user_id: int = Field(foreign_key="user.id")
-    recipe_id: int = Field(foreign_key="recipe.id")
+    recipe_id: int  # External recipe ID, not a foreign key
     content: str
-    created_at: datetime
+    created_at: datetime = Field(default_factory=datetime.now)
 
 class RecipeLike(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     user_id: int = Field(foreign_key="user.id")
-    recipe_id: int = Field(foreign_key="recipe.id")
-
-class Tag(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
-    name: str = Field(index=True)
-
-class RecipeTag(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
-    tag_id: int = Field(foreign_key="tag.id")
-    recipe_id: int = Field(foreign_key="recipe.id")
+    recipe_id: int  # External recipe ID, not a foreign key
 
 class RecipeList(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     user_id: int = Field(foreign_key="user.id")
     name: str
-    created_at: datetime
+    created_at: datetime = Field(default_factory=datetime.now)
 
 class RecipeListItem(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     recipe_list_id: int = Field(foreign_key="recipelist.id")
-    recipe_id: int = Field(foreign_key="recipe.id")
+    recipe_id: int  # External recipe ID, not a foreign key
 
-class RecipeCreate(SQLModel):
-    title: str
-    description: str | None = None
-    ingredients: str
-    steps: str
-    image_url: str | None = None
+# Recipe Stats model for returning recipe statistics
+class RecipeStats(SQLModel):
+    recipe_id: int
+    likes_count: int
+    comments_count: int
+    user_liked: bool = False
 
 class RecipeRead(SQLModel):
     id: int
-    title: str
-    description: str | None = None
-    ingredients: str
-    steps: str
-    image_url: str | None = None
-    created_at: datetime
     liked: bool = False
-    author_id: int
 
 class RecipeUpdate(SQLModel):
-    title: str | None = None
-    description: str | None = None
-    ingredients: str | None = None
-    steps: str | None = None
-    image_url: str | None = None
+    pass  # Not needed since we don't update recipes in our system
 
-# user.py
-
+# User models
 class Token(BaseModel):
     access_token: str
     token_type: str
@@ -87,3 +60,24 @@ class User(SQLModel, table=True):
     email: str = Field(index=True, unique=True)
     hashed_password: str
     role: str = Field(default="user")
+    description: str | None = None  # Added to align with ER diagram
+    created_at: datetime = Field(default_factory=datetime.now)  # Added to align with ER diagram
+
+class UserCreate(SQLModel):
+    username: str
+    email: str
+    password: str
+    description: str | None = None
+
+class UserRead(SQLModel):
+    id: int
+    username: str
+    email: str
+    role: str
+    description: str | None = None
+    created_at: datetime
+
+class UserUpdate(SQLModel):
+    email: str | None = None
+    description: str | None = None
+    password: str | None = None

@@ -13,7 +13,8 @@ from app.core.db import get_db_session
 from app.core.security import verify_password
 
 reusable_oauth2 = OAuth2PasswordBearer(
-    tokenUrl=f"{settings.API_PREFIX}/auth/access-token"
+    tokenUrl=f"{settings.API_PREFIX}/auth/access-token",
+    auto_error=False
 )
 
 
@@ -55,7 +56,7 @@ async def get_current_user(token: TokenDep, session: SessionDep):
 
 
 async def get_current_user_or_none(token: Annotated[str | None, Depends(reusable_oauth2)], session: SessionDep):
-    if token is None:
+    if token == "null":
         return None
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
