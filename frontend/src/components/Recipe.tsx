@@ -1,72 +1,92 @@
-import { BookmarkIcon, HeartIcon, PlusIcon } from "@heroicons/react/24/outline";
-import { Link, useNavigate, useLoaderData } from "react-router";
-import type { components } from "../api/schema";
-import { $api } from "../api/client";
+import { BookmarkIcon, HeartIcon } from "@heroicons/react/24/outline";
 import { useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router";
+import { $api } from "../api/client";
+import { useLikeMutation } from "../hooks/useLikeMutation";
+
+// Updated interface to match TheMealDB schema
+interface MealDBRecipe {
+  idMeal: string;
+  strMeal: string;
+  strMealAlternate: string | null;
+  strCategory: string;
+  strArea: string;
+  strInstructions: string;
+  strMealThumb: string;
+  strTags: string | null;
+  strYoutube: string | null;
+  // Ingredients and measures (1-20)
+  strIngredient1?: string | null;
+  strIngredient2?: string | null;
+  strIngredient3?: string | null;
+  // ... other ingredients
+  strMeasure1?: string | null;
+  strMeasure2?: string | null;
+  strMeasure3?: string | null;
+  // ... other measures
+  liked?: boolean;
+}
 
 export function Recipe({
   recipe,
   isLoggedIn,
-}: { recipe: components["schemas"]["RecipeRead"]; isLoggedIn: boolean }) {
+}: { recipe: MealDBRecipe; isLoggedIn: boolean }) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const handleRecipeClick = async () => {
-    navigate(`/recipe/${recipe.id}`);
-  };
-
-  const likeMutation = $api.useMutation(
-    "post",
-    "/api/v1/recipes/{recipe_id}/like",
+  const { data: stat } = $api.useQuery(
+    "get",
+    "/api/v1/recipes/{recipe_id}/stats",
     {
-      onSuccess: () => {
-        console.log("Recipe liked successfully");
-      },
-      onError: (error) => {
-        console.error("Error liking recipe:", error);
-      },
-      onSettled: async () => {
-        queryClient.invalidateQueries({
-          queryKey: ["get", "/api/v1/recipes/liked-recipes"],
-        });
-        queryClient.invalidateQueries({
-          queryKey: ["get", "/api/v1/recipes/"],
-        });
-        queryClient.invalidateQueries({
-          queryKey: ["get", "/api/v1/recipes/my-recipes"],
-        });
-      },
+      params: { path: { recipe_id: Number.parseInt(recipe.idMeal) } },
     },
   );
 
+  const handleRecipeClick = async () => {
+    navigate(`/recipe/${recipe.idMeal}`);
+  };
+
+  const {mutateLike, like} = useLikeMutation(recipe.idMeal);
+
   const handleBookmark = async () => {
-    console.log(`Bookmarked recipe ${recipe.id}`);
+    console.log(`Bookmarked recipe ${recipe.idMeal}`);
+  };
+
+  // Create a short description from instructions if no description is provided
+  const getShortDescription = () => {
+    if (!recipe.strInstructions) return "";
+    return recipe.strInstructions.length > 100
+      ? recipe.strInstructions.substring(0, 97) + "..."
+      : recipe.strInstructions;
   };
 
   return (
     <div className="relative z-10 border border-gray-300 rounded-2xl p-8 transform duration-700 hover:border-gray-500">
       <img
-        src={recipe.image_url ?? "https://placehold.co/600x400"}
-        alt={recipe.title}
+        src={recipe.strMealThumb || "https://placehold.co/600x400"}
+        alt={recipe.strMeal}
         className="w-full h-40 object-cover rounded cursor-pointer"
         onClick={handleRecipeClick}
       />
-      <h3 className="text-xl font-semibold mt-2">{recipe.title}</h3>
-      <p className="text-sm text-gray-600">{recipe.description}</p>
+      <h3 className="text-xl font-semibold mt-2">{recipe.strMeal}</h3>
+      <p className="text-sm text-gray-600">
+        {recipe.strCategory} • {recipe.strArea}
+      </p>
+      <p className="text-sm text-gray-600 mt-2">{getShortDescription()}</p>
       {isLoggedIn && (
         <div className="flex space-x-4 mt-2">
           <button
             type="button"
             className="btn btn-ghost btn-circle text-red-600"
             onClick={() =>
-              likeMutation.mutate({
-                params: { path: { recipe_id: recipe.id } },
+              mutateLike({
+                params: { path: { recipe_id: Number.parseInt(recipe.idMeal) } },
               })
             }
           >
             <HeartIcon
               className="w-6 h-6"
-              fill={recipe.liked ? "currentColor" : "none"}
+              fill={like ? "currentColor" : "none"}
             />
           </button>
           <button

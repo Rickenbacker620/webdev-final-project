@@ -7,6 +7,7 @@ import { NavBar } from "./Home/NavBar";
 import Layout from "./Layout";
 import RecipeDetail from "./Recipe/RecipeDetail";
 import RecipeEditor from "./Recipe/RecipeEditor";
+import RecipeSearchResult from "./Recipe/RecipeSearchResult";
 
 const router = createBrowserRouter([
   {
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
         path: "/signup",
         element: <Signup />,
       },
+      {
+        path: "search",
+        element: <RecipeSearchResult />,
+      }
     ],
   },
 ]);
