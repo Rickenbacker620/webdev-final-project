@@ -503,14 +503,16 @@ export interface operations {
     };
     "recipes-create_recipe_list": {
         parameters: {
-            query: {
-                recipe_list_name: string;
-            };
+            query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "application/json": string;
+            };
+        };
         responses: {
             /** @description Successful Response */
             200: {
@@ -565,16 +567,18 @@ export interface operations {
     };
     "recipes-add_recipe_to_list": {
         parameters: {
-            query: {
-                recipe_id: number;
-            };
+            query?: never;
             header?: never;
             path: {
                 recipe_list_id: number;
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "application/json": number;
+            };
+        };
         responses: {
             /** @description Successful Response */
             200: {

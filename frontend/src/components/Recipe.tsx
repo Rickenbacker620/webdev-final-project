@@ -1,8 +1,10 @@
-import { BookmarkIcon, HeartIcon } from "@heroicons/react/24/outline";
+import { BookmarkIcon, HeartIcon, PlusCircleIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 import { $api } from "../api/client";
 import { useLikeMutation } from "../hooks/useLikeMutation";
+import { useState } from "react";
+import { AddToListModal } from "./AddToListModal";
 
 // Updated interface to match TheMealDB schema
 interface MealDBRecipe {
@@ -33,6 +35,7 @@ export function Recipe({
 }: { recipe: MealDBRecipe; isLoggedIn: boolean }) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { data: stat } = $api.useQuery(
     "get",
@@ -46,10 +49,10 @@ export function Recipe({
     navigate(`/recipe/${recipe.idMeal}`);
   };
 
-  const {mutateLike, like} = useLikeMutation(recipe.idMeal);
+  const { mutateLike, like } = useLikeMutation(recipe.idMeal);
 
-  const handleBookmark = async () => {
-    console.log(`Bookmarked recipe ${recipe.idMeal}`);
+  const handleAddtoList = async () => {
+    setIsModalOpen(true);
   };
 
   // Create a short description from instructions if no description is provided
@@ -92,11 +95,17 @@ export function Recipe({
           <button
             type="button"
             className="btn btn-ghost btn-circle text-green-600"
-            onClick={() => handleBookmark()}
+            onClick={handleAddtoList}
           >
-            <BookmarkIcon className="w-6 h-6" />
+            <PlusIcon className="w-6 h-6" />
           </button>
         </div>
+      )}
+      {isModalOpen && (
+        <AddToListModal
+          recipeId={recipe.idMeal}
+          onClose={() => setIsModalOpen(false)}
+        />
       )}
     </div>
   );
