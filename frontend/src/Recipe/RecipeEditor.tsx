@@ -9,30 +9,27 @@ function RecipeEditor() {
   const [steps, setSteps] = useState("");
   const navigate = useNavigate();
 
-  const recipePostMutation = $api.useMutation(
-    "post",
-    "/api/v1/recipes/",
-  )
+  const recipePostMutation = $api.useMutation("post", "/api/v1/recipes/");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await recipePostMutation.mutateAsync(
-      {
-        body: {
-          title: title,
-          description: description,
-          ingredients: ingredients,
-          steps: steps,
-        }
-      }
-    )
+    await recipePostMutation.mutateAsync({
+      body: {
+        title: title,
+        description: description,
+        ingredients: ingredients,
+        steps: steps,
+      },
+    });
     navigate("/");
   };
 
   return (
     <div className="max-w-lg w-1/4 min-w-[300px] mt-2 rounded-xl shadow-lg bg-base-200 mx-auto">
       <form className="space-y-6 p-6 sm:p-10" onSubmit={handleSubmit}>
-        <h2 className="text-2xl font-bold text-primary text-center">Post a Recipe</h2>
+        <h2 className="text-2xl font-bold text-primary text-center">
+          Post a Recipe
+        </h2>
         <div className="form-control">
           <label className="label">
             <span className="label-text text-primary">Title</span>

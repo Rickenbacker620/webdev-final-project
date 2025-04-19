@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useNavigate } from "react-router";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 import { $api } from "../api/client";
 
 const isLoggedIn = () => {
@@ -16,44 +16,38 @@ const useAuth = () => {
     "get",
     "/api/v1/auth/users/me",
     {},
-    { enabled: isLoggedIn(),
-        retry: false,
-     },
+    { enabled: isLoggedIn(), retry: false },
   );
 
   const user = isError ? undefined : data;
 
-  const signUpMutation = $api.useMutation(
-    "post",
-    "/api/v1/auth/signup",
-    {
-        onSuccess: () => {
-            navigate("/login")
-        },
+  const signUpMutation = $api.useMutation("post", "/api/v1/auth/signup", {
+    onSuccess: () => {
+      navigate("/login");
+    },
 
-        onSettled: () => {
-            queryClient.invalidateQueries({ queryKey: ["get", "/api/v1/auth/users/me"] });
-        }
-    }
-  )
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["get", "/api/v1/auth/users/me"],
+      });
+    },
+  });
 
-  const loginMutation = $api.useMutation(
-    "post",
-    "/api/v1/auth/access-token",
-    {
-      onSuccess: (data) => {
-        localStorage.setItem("jwt", data.access_token);
-        navigate("/")
-      },
-      onError: (err) => {
-        console.log(err)
-      },
-    }
-  )
+  const loginMutation = $api.useMutation("post", "/api/v1/auth/access-token", {
+    onSuccess: (data) => {
+      localStorage.setItem("jwt", data.access_token);
+      navigate("/");
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  });
 
   const logout = async () => {
     localStorage.removeItem("jwt");
-    await queryClient.invalidateQueries({ queryKey: ["get", "/api/v1/auth/users/me", {}] });
+    await queryClient.invalidateQueries({
+      queryKey: ["get", "/api/v1/auth/users/me", {}],
+    });
     navigate("/");
   };
 
