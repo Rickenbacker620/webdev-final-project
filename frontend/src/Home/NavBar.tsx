@@ -1,21 +1,49 @@
+import {
+  MagnifyingGlassCircleIcon,
+  PlusIcon,
+} from "@heroicons/react/24/outline";
 import { Link, useNavigate } from "react-router";
-import { PlusIcon } from "@heroicons/react/24/outline";
 import useAuth from "../hooks/useAuth";
+import { useState } from "react";
 
 function SearchBar() {
+  const navigate = useNavigate();
+  const [query, setQuery] = useState("");
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && query.trim()) {
+      console.log("Searching for:", query);
+      navigate(`/search?query=${encodeURIComponent(query)}`);
+    }
+  };
+
   return (
-    <input
-      type="text"
-      placeholder="Search"
-      className="input input-bordered w-24 md:w-auto"
-    />
+    <label className="input">
+      <svg
+        className="h-[1em] opacity-50"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+      >
+        <g
+          strokeLinejoin="round"
+          strokeLinecap="round"
+          strokeWidth="2.5"
+          fill="none"
+          stroke="currentColor"
+        >
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.3-4.3"></path>
+        </g>
+      </svg>
+      <input type="search" required placeholder="Search" value={query} onKeyDown={handleKeyDown} 
+      onChange={(e) => setQuery(e.target.value)}
+      />
+    </label>
   );
 }
 
 function AvatarDropdown() {
-
-  const {logout} = useAuth()
-
+  const { logout } = useAuth();
 
   return (
     <div className="dropdown dropdown-end">
@@ -52,12 +80,14 @@ function AvatarDropdown() {
 function NavBar() {
   const navigate = useNavigate();
 
-  const {user} = useAuth()
+  const { user } = useAuth();
 
   return (
     <div className="navbar bg-base-100 shadow-sm sticky top-0 z-50">
       <div className="flex-1">
-        <Link to="/" className="btn btn-ghost text-xl">What to Eat</Link>
+        <Link to="/" className="btn btn-ghost text-xl">
+          What to Eat
+        </Link>
       </div>
       <div className="flex gap-2">
         {!user ? (

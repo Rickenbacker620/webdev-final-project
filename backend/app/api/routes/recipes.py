@@ -1,5 +1,6 @@
 from datetime import datetime
-from fastapi import APIRouter, HTTPException
+from typing import Annotated
+from fastapi import APIRouter, Body, HTTPException
 from pydantic import BaseModel
 from sqlmodel import select, func
 
@@ -88,7 +89,7 @@ async def get_like_status(
 # Create a new recipe-list
 @router.post("/recipe-lists")
 async def create_recipe_list(
-    recipe_list_name: str,
+    recipe_list_name: Annotated[str, Body()],
     current_user: CurrentUser,
     session: SessionDep
 ):
@@ -130,7 +131,7 @@ async def get_recipes_in_list(
 # Add a recipe to a recipe-list
 @router.post("/recipe-lists/{recipe_list_id}")
 async def add_recipe_to_list(
-    recipe_id: int,
+    recipe_id: Annotated[int, Body()],
     recipe_list_id: int,
     current_user: CurrentUser,
     session: SessionDep
