@@ -23,7 +23,15 @@ function Signup() {
       return;
     }
     await signUpMutation.mutateAsync({
-      body: { email: formData.email, password: formData.password },
+      params: {
+        query: {
+          email: formData.email,
+          password: formData.password,
+          username: formData.email,
+        }
+      }
+
+      // body: { email: formData.email, password: formData.password },
     });
   };
 
@@ -33,13 +41,13 @@ function Signup() {
         <h2 className="text-2xl font-bold text-primary text-center">Sign Up</h2>
         <div className="form-control">
           <label className="label">
-            <span className="label-text text-primary">Email</span>
+            <span className="label-text text-primary">Username</span>
           </label>
           <input
-            type="email"
+            type="text"
             name="email"
             className="input input-bordered border-primary text-primary"
-            placeholder="Enter your email"
+            placeholder="Enter your username"
             value={formData.email}
             onChange={handleInputChange}
             required

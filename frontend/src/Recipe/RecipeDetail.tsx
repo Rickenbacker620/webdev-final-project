@@ -4,6 +4,7 @@ import { $api } from "../api/client";
 import { useState } from "react";
 import { useLikeMutation } from "../hooks/useLikeMutation";
 import { HeartIcon } from "@heroicons/react/24/outline";
+import useAuth from "../hooks/useAuth";
 
 function RecipeDetail() {
   const { id } = useParams();
@@ -48,8 +49,9 @@ function RecipeDetail() {
     },
   );
 
-  const {like, mutateLike} = useLikeMutation(id!);
+  const { like, mutateLike } = useLikeMutation(id!);
 
+  const { user } = useAuth();
 
   if (!recipe) {
     return <div>Loading...</div>;
@@ -62,7 +64,6 @@ function RecipeDetail() {
     return ingredient ? `${measure} ${ingredient}` : null;
   }).filter(Boolean);
 
-
   return (
     <div className="flex items-center justify-center min-h-screen">
       <div className="w-full rounded-xl shadow-lg bg-white p-6">
@@ -74,9 +75,11 @@ function RecipeDetail() {
             type="button"
             className="btn btn-ghost btn-circle text-red-600"
             onClick={() =>
-              mutateLike({
-                params: { path: { recipe_id: Number.parseInt(id!) } },
-              })
+              user
+                ? mutateLike({
+                    params: { path: { recipe_id: Number.parseInt(id!) } },
+                  })
+                : alert("Please log in to like recipes.")
             }
           >
             <HeartIcon
@@ -147,17 +150,23 @@ function RecipeDetail() {
               placeholder="Add a comment..."
               value={comment}
               onChange={(e) => setComment(e.target.value)}
+              disabled={!user}
             />
             <button
               className="btn btn-primary mt-2"
               onClick={() => {
-                commentMutation.mutateAsync({
-                  params: { path: { recipe_id: Number.parseInt(id!) } },
-                  body: {
-                    content: comment,
-                  },
-                });
+                if (user) {
+                  commentMutation.mutateAsync({
+                    params: { path: { recipe_id: Number.parseInt(id!) } },
+                    body: {
+                      content: comment,
+                    },
+                  });
+                } else {
+                  alert("Please log in to comment.");
+                }
               }}
+              disabled={!user}
             >
               Submit
             </button>

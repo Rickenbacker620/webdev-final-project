@@ -75,6 +75,7 @@ async def get_like_status(
     current_user: CurrentUser,
     session: SessionDep
 ):
+    print(current_user.id)
     # Check if the user has liked the recipe
     like_status = await session.exec(
         select(RecipeLike).where(

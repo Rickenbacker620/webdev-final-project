@@ -80,3 +80,9 @@ class UserUpdate(SQLModel):
     email: str | None = None
     description: str | None = None
     password: str | None = None
+
+class UserFollow(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    follower_id: int = Field(foreign_key="user.id")
+    followee_id: int = Field(foreign_key="user.id")
+    created_at: datetime = Field(default_factory=datetime.now)

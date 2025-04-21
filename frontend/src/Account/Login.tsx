@@ -1,40 +1,21 @@
 import { useNavigate } from "react-router";
 import { fetchClient } from "../api/client";
 import useAuth from "../hooks/useAuth";
+import { useState } from "react";
 
 function Login() {
   const navigate = useNavigate();
   const { loginMutation } = useAuth();
-
-  // const handleLogin = async (event: React.MouseEvent<HTMLButtonElement>) => {
-  //   event.preventDefault();
-  //   // Handle login logic here
-  //   console.log("Login form submitted");
-  //   const {data} = await fetchClient.POST("/api/v1/auth/access-token", {
-  //     body: {
-  //       username: "regular_user",
-  //       password: "password123",
-  //       grant_type: "password",
-  //       scope: ""
-  //     },
-  //     bodySerializer(body) {
-  //       return new URLSearchParams(body).toString();
-  //     },
-  //     headers: {
-  //       "Content-Type": "application/x-www-form-urlencoded",
-  //     }
-  //   });
-  //   localStorage.setItem("jwt", data.access_token);
-  //   navigate("/");
-  // };
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleLogin = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     console.log("Login form submitted");
     await loginMutation.mutateAsync({
       body: {
-        username: "regular_user",
-        password: "password123",
+        username,
+        password,
         grant_type: "password",
         scope: "",
       },
@@ -53,12 +34,14 @@ function Login() {
         <h2 className="text-2xl font-bold text-primary text-center">Login</h2>
         <div className="form-control">
           <label className="label">
-            <span className="label-text text-primary">Email</span>
+            <span className="label-text text-primary">Username</span>
           </label>
           <input
-            type="email"
+            type="text"
             className="input input-bordered border-primary text-primary"
-            placeholder="Enter your email"
+            placeholder="Enter your username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
           />
         </div>
         <div className="form-control">
@@ -69,6 +52,8 @@ function Login() {
             type="password"
             className="input input-bordered border-primary text-primary"
             placeholder="Enter your password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
         </div>
         <button

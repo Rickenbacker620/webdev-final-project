@@ -5,6 +5,7 @@ import { $api } from "../api/client";
 import { useLikeMutation } from "../hooks/useLikeMutation";
 import { useState } from "react";
 import { AddToListModal } from "./AddToListModal";
+import useAuth from "../hooks/useAuth";
 
 // Updated interface to match TheMealDB schema
 interface MealDBRecipe {
@@ -37,6 +38,8 @@ export function Recipe({
   const queryClient = useQueryClient();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const {user} = useAuth()
+
   const { data: stat } = $api.useQuery(
     "get",
     "/api/v1/recipes/{recipe_id}/stats",
@@ -46,7 +49,13 @@ export function Recipe({
   );
 
   const handleRecipeClick = async () => {
-    navigate(`/recipe/${recipe.idMeal}`);
+    console.log(user)
+    if (!user) {
+      console.log(user);
+      navigate("/login");
+    } else {
+      navigate(`/recipe/${recipe.idMeal}`);
+    }
   };
 
   const { mutateLike, like } = useLikeMutation(recipe.idMeal);
