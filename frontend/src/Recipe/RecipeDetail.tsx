@@ -136,8 +136,13 @@ function RecipeDetail() {
                   className="p-4 bg-base-200 rounded-lg shadow-md"
                 >
                   <p className="text-sm text-gray-600">
-                    {new Date(comment.created_at).toLocaleDateString()} - User{" "}
-                    {comment.user_id}
+                    {new Date(comment.created_at).toLocaleDateString()} - 
+                    <a 
+                      href={`/profile/${comment.user_id}`} 
+                      className="text-primary hover:underline"
+                    >
+                      {comment.username}
+                    </a>
                   </p>
                   <p className="text-base text-gray-800">{comment.content}</p>
                 </div>

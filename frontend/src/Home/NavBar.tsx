@@ -43,7 +43,8 @@ function SearchBar() {
 }
 
 function AvatarDropdown() {
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
+
 
   return (
     <div className="dropdown dropdown-end">
@@ -64,7 +65,7 @@ function AvatarDropdown() {
         className="menu menu-lg dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
       >
         <li>
-          <Link to="/profile"> Profile </Link>
+          <Link to={`/profile/${user?.id}`}> Profile </Link>
         </li>
         <li>
           <a>Settings</a>
@@ -103,13 +104,6 @@ function NavBar() {
           <>
             <SearchBar />
             <AvatarDropdown />
-            <button
-              className="btn btn-primary flex items-center space-x-1"
-              onClick={() => navigate("/recipe/new")}
-            >
-              <PlusIcon className="w-6 h-6 inline" strokeWidth="2" />
-              <span>Post Recipe</span>
-            </button>
           </>
         )}
       </div>

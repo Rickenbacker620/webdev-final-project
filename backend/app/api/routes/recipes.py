@@ -5,7 +5,7 @@ from pydantic import BaseModel
 from sqlmodel import select, func
 
 from app.api.deps import CurrentUser, CurrentUserNotRequired, SessionDep
-from app.models import RecipeLike, Comment, RecipeStats, RecipeList, RecipeListItem
+from app.models import RecipeLike, Comment, RecipeStats, RecipeList, RecipeListItem, User
 
 router = APIRouter()
 
@@ -201,10 +201,19 @@ async def get_comments_on_recipe(
 ):
     # Retrieve all comments for the given recipe
     comments = await session.exec(
-        select(Comment).where(Comment.recipe_id == recipe_id)
+        select(Comment, User.username).join(User, Comment.user_id == User.id).where(Comment.recipe_id == recipe_id)
     )
 
-    return comments.all()
+    return [
+        {
+            "id": comment.id,
+            "content": comment.content,
+            "created_at": comment.created_at,
+            "username": username,
+            "user_id": comment.user_id,
+        }
+        for comment, username in comments
+    ]
 
 @router.delete("/{recipe_id}/comments/{comment_id}")
 async def delete_comment_on_recipe(

@@ -2,6 +2,8 @@ import { useQueries, useQuery } from "@tanstack/react-query";
 import { $api, fetchClient } from "../api/client";
 import { Recipe } from "../components/Recipe";
 import { useState } from "react";
+import { useParams } from "react-router";
+import useAuth from "../hooks/useAuth";
 
 function useRecipesUnderList(recipeListId: number| undefined) {
   return useQuery({
@@ -21,7 +23,14 @@ function useRecipesUnderList(recipeListId: number| undefined) {
 
 
 function Profile() {
-  const { data } = $api.useQuery("get", "/api/v1/auth/users/me");
+  const { userid } = useParams();
+
+  const {user} = useAuth();
+  const currentUserId = user?.id;
+
+  const { data: userData, isLoading, isError } = $api.useQuery("get", `/api/v1/user/{user_id}`, {
+    params: { path: { user_id: Number.parseInt(userid!) } },
+  })
 
   const { data: likedRecipesIds } = $api.useQuery(
     "get",
@@ -42,14 +51,12 @@ function Profile() {
         params: {
           path: {
             recipe_list_id: currentSelectedList,
-          }
-        }
-      })
-
-      console.log(recipe_ids.data)
+          },
+        },
+      });
 
       const recipeDetails = await Promise.all(
-        recipe_ids.data.map(async ({recipe_id}) => {
+        recipe_ids.data.map(async ({ recipe_id }) => {
           const response = await fetch(
             `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${recipe_id}`,
           );
@@ -58,18 +65,15 @@ function Profile() {
           }
           return response.json();
         })
-      )
+      );
 
-      return recipeDetails
+      return recipeDetails;
     },
     enabled: !!currentSelectedList,
     initialData: () => {
-      return []
-    }
-  }
-  )
-
-
+      return [];
+    },
+  });
 
   const likedRecipes = useQueries({
     queries:
@@ -87,9 +91,61 @@ function Profile() {
       })) || [],
   });
 
+  if (isLoading) {
+    return <div className="loading loading-spinner loading-lg"></div>;
+  }
+
+  if (isError) {
+    return <div className="alert alert-error">Error loading user data</div>;
+  }
+
+  if (currentUserId !== Number.parseInt(userid!)) {
+    return (
+      <div className="w-auto h-full my-auto mx-2 bg-base-100 rounded-xl">
+        <div className="p-10">
+          <h1 className="text-3xl font-bold">{userData?.username}</h1>
+          <p className="text-base-content mt-2">{userData?.description || "No description available."}</p>
+        </div>
+        <div className="p-6 tabs tabs-border">
+          <input
+            type="radio"
+            name="profile_tabs"
+            className="tab"
+            aria-label="Liked Recipes"
+            defaultChecked
+          />
+          <div className="tab-content p-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {likedRecipes.map((recipe, index) => {
+                if (recipe.isLoading) {
+                  return <div key={index}>Loading...</div>;
+                }
+                if (recipe.isError) {
+                  return <div key={index}>Error loading recipe</div>;
+                }
+                const meal = recipe.data?.meals[0];
+                return (
+                  <Recipe
+                    key={meal.idMeal}
+                    recipe={meal}
+                    isLoggedIn={!!userData}
+                  />
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-auto h-full my-auto mx-2 bg-base-100 rounded-xl">
-      <div className="tabs tabs-border">
+      <div className="p-10">
+        <h1 className="text-3xl font-bold">{userData?.username}</h1>
+        <p className="text-base-content mt-2">{userData?.description || "No description available."}</p>
+      </div>
+      <div className="p-6 tabs tabs-border">
         <input
           type="radio"
           name="profile_tabs"
@@ -111,7 +167,7 @@ function Profile() {
                 <Recipe
                   key={meal.idMeal}
                   recipe={meal}
-                  isLoggedIn={!!data}
+                  isLoggedIn={!!userData}
                 />
               );
             })}
@@ -135,7 +191,7 @@ function Profile() {
                   <Recipe
                     key={index}
                     recipe={recipe.meals[0]}
-                    isLoggedIn={!!data}
+                    isLoggedIn={!!userData}
                   />
                 ))}
               </div>
