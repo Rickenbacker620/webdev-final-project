@@ -17,7 +17,6 @@ FROM base AS build
 ARG VITE_BACKEND_URL
 ENV VITE_BACKEND_URL=$VITE_BACKEND_URL
 
-RUN echo "VITE_BACKEND_URL is set to: $VITE_BACKEND_URL"
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 RUN pnpm run build
 

@@ -4,7 +4,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        VITE_BACKEND_URL: http://localhost:8000
+        VITE_BACKEND_URL: ${VITE_BACKEND_URL}
     ports:
       - "3000:80"
     depends_on:
