@@ -8,6 +8,7 @@ import Layout from "./Layout";
 import RecipeDetail from "./Recipe/RecipeDetail";
 import RecipeEditor from "./Recipe/RecipeEditor";
 import RecipeSearchResult from "./Recipe/RecipeSearchResult";
+import Settings from "./Account/Settings";
 
 const router = createBrowserRouter([
   {
@@ -39,8 +40,12 @@ const router = createBrowserRouter([
         element: <Signup />,
       },
       {
-        path: "search",
+        path: "/search",
         element: <RecipeSearchResult />,
+      },
+      {
+        path: "/settings",
+        element: <Settings />,
       }
     ],
   },

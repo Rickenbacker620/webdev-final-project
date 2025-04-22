@@ -68,7 +68,7 @@ function AvatarDropdown() {
           <Link to={`/profile/${user?.id}`}> Profile </Link>
         </li>
         <li>
-          <a>Settings</a>
+          <Link to={`/settings`} > Settings </Link>
         </li>
         <li>
           <a onClick={logout}>Logout</a>
@@ -101,10 +101,11 @@ function NavBar() {
             </Link>
           </div>
         ) : (
-          <>
+          <div className="flex items-center gap-2">
             <SearchBar />
             <AvatarDropdown />
-          </>
+            <div>{user.username}</div>
+          </div>
         )}
       </div>
     </div>

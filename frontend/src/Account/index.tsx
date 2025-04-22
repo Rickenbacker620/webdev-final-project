@@ -1,3 +1,5 @@
+import Settings from "./Settings";
+
 function Account() {
   return (
     <div style={{ textAlign: "center", padding: "2rem" }}>
@@ -8,3 +10,5 @@ function Account() {
 }
 
 export default Account;
+
+export { Login, Profile, Signup, Settings };

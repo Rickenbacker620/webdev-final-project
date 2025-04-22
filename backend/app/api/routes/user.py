@@ -1,7 +1,8 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, HTTPException
 from sqlmodel import select
 from app.api.deps import CurrentUser, SessionDep
 from app.models import User, UserFollow, UserUpdate
+from app.core.security import get_password_hash
 
 router = APIRouter()
 
@@ -73,10 +74,18 @@ async def get_user_profile(user_id: int, current_user: CurrentUser, session: Ses
 async def update_user_profile(
     user_update: UserUpdate, current_user: CurrentUser, session: SessionDep
 ):
-    for key, value in user_update.dict(exclude_unset=True).items():
-        setattr(current_user, key, value)
+    user = await session.get(User, current_user.id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found.")
 
-    session.add(current_user)
+    for key, value in user_update.model_dump(exclude_unset=True).items():
+        if key == "password":
+            # Handle password hashing
+            user.hashed_password = get_password_hash(value)
+            continue
+        setattr(user, key, value)
+
+    session.add(user)
     await session.commit()
-    await session.refresh(current_user)
-    return current_user
+    await session.refresh(user)
+    return user
