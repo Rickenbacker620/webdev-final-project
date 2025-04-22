@@ -16,7 +16,7 @@ const authMiddleware: Middleware = {
 };
 
 export const fetchClient = createFetchClient<paths>({
-  baseUrl: "http://localhost:8000",
+  baseUrl: import.meta.env.VITE_BACKEND_URL
 });
 fetchClient.use(authMiddleware);
 export const $api = createClient(fetchClient);
