@@ -4,6 +4,7 @@ erDiagram
   USER ||--o{ COMMENT : writes
   USER ||--o{ RECIPE_LIKE : likes
   USER ||--o{ RECIPE_LIST : owns
+  USER ||--o{ USER_FOLLOW : follows
 
   RECIPE ||--|{ COMMENT : has
   RECIPE_LIST ||--o{ RECIPE_LIST_ITEM : contains
@@ -12,7 +13,7 @@ erDiagram
     int id PK
     varchar username
     varchar email
-    varchar password_hash
+    varchar hashed_password
     varchar role
     varchar description
     datetime created_at
@@ -43,5 +44,12 @@ erDiagram
     int id PK
     int recipe_list_id FK
     int recipe_id
+  }
+
+  USER_FOLLOW {
+    int id PK
+    int follower_id FK
+    int followee_id FK
+    datetime created_at
   }
 ```
