@@ -26,7 +26,7 @@ async def create_mock_data():
         user = User(
             username="regular_user",
             email="user@example.com",
-            hashed_password=get_password_hash("password123"),
+            hashed_password=get_password_hash("regularpass"),
             description="Just a regular user",
             role="user",
         )
@@ -34,12 +34,31 @@ async def create_mock_data():
         chef = User(
             username="chef_user",
             email="chef@example.com",
-            hashed_password=get_password_hash("chefpassword"),
+            hashed_password=get_password_hash("chefpass"),
             description="A passionate chef",
             role="chef",
         )
 
-        session.add_all([user, chef])
+        admin = User(
+            username="admin_user",
+            email="admin@example.com",
+            hashed_password=get_password_hash("adminpass"),
+            description="The admin user",
+            role="admin",
+        )
+
+        test_users = [
+            User(
+                username=f"test_user{i}",
+                email=f"test{i}@email.com",
+                hashed_password=get_password_hash(f"testpass{i}"),
+                description=f"Test user {i}",
+                role="user",
+            )
+            for i in range(1, 6)
+        ]
+
+        session.add_all([user, chef, admin, *test_users])
         await session.flush()  # ensure user.id, chef.id are available
         await session.refresh(user)
         await session.refresh(chef)

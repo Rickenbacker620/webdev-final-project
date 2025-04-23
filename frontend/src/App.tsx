@@ -9,6 +9,7 @@ import RecipeDetail from "./Recipe/RecipeDetail";
 import RecipeEditor from "./Recipe/RecipeEditor";
 import RecipeSearchResult from "./Recipe/RecipeSearchResult";
 import Settings from "./Account/Settings";
+import UserManagement from "./Account/UserManagement";
 
 const router = createBrowserRouter([
   {
@@ -46,6 +47,10 @@ const router = createBrowserRouter([
       {
         path: "/settings",
         element: <Settings />,
+      },
+      {
+        path: "/user-management",
+        element: <UserManagement />,
       }
     ],
   },

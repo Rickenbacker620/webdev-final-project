@@ -258,7 +258,8 @@ export interface paths {
         get: operations["user-get_user_profile"];
         put?: never;
         post?: never;
-        delete?: never;
+        /** Delete User */
+        delete: operations["user-delete_user"];
         options?: never;
         head?: never;
         patch?: never;
@@ -274,6 +275,23 @@ export interface paths {
         get?: never;
         /** Update User Profile */
         put: operations["user-update_user_profile"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/user/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Users */
+        get: operations["user-list_users"];
+        put?: never;
         post?: never;
         delete?: never;
         options?: never;
@@ -976,6 +994,35 @@ export interface operations {
             };
         };
     };
+    "user-delete_user": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                user_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     "user-update_user_profile": {
         parameters: {
             query?: never;
@@ -1005,6 +1052,26 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    "user-list_users": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
                 };
             };
         };

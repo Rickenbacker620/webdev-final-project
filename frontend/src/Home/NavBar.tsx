@@ -64,6 +64,15 @@ function AvatarDropdown() {
         tabIndex={0}
         className="menu menu-lg dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
       >
+        {
+          user?.role === "admin" && (
+            <li>
+              <Link to="/user-management">
+              User Management
+              </Link>
+            </li>
+          )
+        }
         <li>
           <Link to={`/profile/${user?.id}`}> Profile </Link>
         </li>
