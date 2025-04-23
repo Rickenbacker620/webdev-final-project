@@ -21,7 +21,7 @@ export function useLikeMutation(recipeId: string) {
       queryClient.invalidateQueries({
         queryKey: [
     "get",
-    "/api/v1/recipes/liked-recipes"
+    "/api/v1/recipes/liked-recipes/{user_id}",
         ]
       }
       )
