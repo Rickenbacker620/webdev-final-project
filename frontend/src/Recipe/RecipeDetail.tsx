@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useParams } from "react-router";
+import { Link, useParams } from "react-router";
 import { $api } from "../api/client";
 import { useState } from "react";
 import { useLikeMutation } from "../hooks/useLikeMutation";
@@ -137,12 +137,12 @@ function RecipeDetail() {
                 >
                   <p className="text-sm text-gray-600">
                     {new Date(comment.created_at).toLocaleDateString()} - 
-                    <a 
-                      href={`/profile/${comment.user_id}`} 
+                    <Link
+                      to={`/profile/${comment.user_id}`} 
                       className="text-primary hover:underline"
                     >
                       {comment.username}
-                    </a>
+                    </Link>
                   </p>
                   <p className="text-base text-gray-800">{comment.content}</p>
                 </div>
