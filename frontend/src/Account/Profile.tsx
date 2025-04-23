@@ -34,7 +34,10 @@ function Profile() {
 
   const { data: likedRecipesIds } = $api.useQuery(
     "get",
-    "/api/v1/recipes/liked-recipes",
+    "/api/v1/recipes/liked-recipes/{user_id}",
+    {
+      params: { path: { user_id: Number.parseInt(userid!) } },
+    },
   );
 
   const { data: recipeLists } = $api.useQuery(

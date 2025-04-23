@@ -72,7 +72,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/recipes/liked-recipes": {
+    "/api/v1/recipes/liked-recipes/{user_id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -518,7 +518,9 @@ export interface operations {
         parameters: {
             query?: never;
             header?: never;
-            path?: never;
+            path: {
+                user_id: number;
+            };
             cookie?: never;
         };
         requestBody?: never;
@@ -530,6 +532,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

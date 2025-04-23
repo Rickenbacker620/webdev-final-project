@@ -34,11 +34,11 @@ async def get_recipe_details(
         comments_count=comments_count
     )
 
-@router.get("/liked-recipes")
-async def get_liked_recipes(current_user: CurrentUser, session: SessionDep):
+@router.get("/liked-recipes/{user_id}")
+async def get_liked_recipes(current_user: CurrentUser, session: SessionDep, user_id: int):
     liked_recipes = await session.exec(
         select(RecipeLike)
-        .where(RecipeLike.user_id == current_user.id)
+        .where(RecipeLike.user_id == user_id)
     )
 
     liked_recipes_ids = set(

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { $api } from "../api/client";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -48,7 +48,11 @@ function UserManagement() {
           {users?.map((user) => (
             <tr key={user.id}>
               <td>{user.id}</td>
-              <td>{user.username}</td>
+              <td>
+                <Link to={`/profile/${user.id}`} className="text-blue-500">
+                  {user.username}
+                </Link>
+                </td>
               <td>{user.email}</td>
               <td>
                 <button
